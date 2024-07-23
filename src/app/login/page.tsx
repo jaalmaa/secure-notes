@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { login, type UserSchema } from "~/server/auth";
 
@@ -31,6 +32,7 @@ export default function Page() {
       path: "/",
       sameSite: "strict",
     });
+    redirect("/notes");
   };
 
   return (
@@ -41,7 +43,7 @@ export default function Page() {
         <input placeholder="password" type="password" name="password" />
         <button type="submit">Log in</button>
       </form>
-      <Link href="/login">Create account</Link>
+      <Link href="/signup">Create account</Link>
     </>
   );
 }

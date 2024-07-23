@@ -1,6 +1,8 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createUser } from "~/server/auth";
+import { login } from "~/server/auth";
 import type { UserSchema } from "~/server/auth";
 
 const accountSchema = z.object({
@@ -24,7 +26,16 @@ export default function Page() {
     const user: UserSchema = { username, password };
     const created = await createUser(user);
     if (created) {
-      redirect("/");
+      const isLoggedIn = await login(user.username, user.password);
+      if (!isLoggedIn) return "Login failed";
+      cookies().set("Authorization", isLoggedIn, {
+        secure: true,
+        httpOnly: true,
+        expires: Date.now() + 2 * 60 * 60 * 1000, // expires after 2 hours
+        path: "/",
+        sameSite: "strict",
+      });
+      redirect("/notes");
     }
   }
 
