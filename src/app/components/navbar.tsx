@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 export const Navbar = () => {
   const handleLogout = async () => {
     "use server";
-    cookies().set("Authorization", "invalid");
+    cookies().delete("Authorization");
     redirect("/login");
   };
 
