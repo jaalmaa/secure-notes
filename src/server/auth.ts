@@ -32,15 +32,18 @@ export async function createUser(user: UserSchema) {
       "Username must be at least 2 characters and password must be at least 6 characters"
     );
   }
-  // TODO: check if user exists first
-  const hash = createHash(password);
-  await prisma.user.create({
-    data: {
-      username: username,
-      password: hash,
-    },
+  const userExists = await prisma.user.findFirst({
+    where: { username },
   });
-  return 1;
+  if (!userExists) {
+    const hash = createHash(password);
+    await prisma.user.create({
+      data: {
+        username: username,
+        password: hash,
+      },
+    });
+  }
 }
 
 export async function login(username: string, password: string) {
