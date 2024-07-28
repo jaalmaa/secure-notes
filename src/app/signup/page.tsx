@@ -65,7 +65,7 @@ export default function Page() {
               type="submit"
               className="text-white bg-gray-600 hover:bg-gray-800 rounded-lg py-2 px-4 w-full"
             >
-              Let's go
+              Sign Up
             </button>
           </div>
         </form>
