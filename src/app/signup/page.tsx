@@ -41,12 +41,35 @@ export default function Page() {
 
   return (
     <>
-      <h1>Sign Up</h1>
-      <form action={handleSignupSubmit}>
-        <input placeholder="username" name="username" />
-        <input placeholder="password" type="password" name="password" />
-        <button type="submit">Create Account</button>
-      </form>
+      <h1 className="text-5xl m-16">Secure Notes</h1>
+      <div className="border-gray-200 border rounded-md px-4 py-8 space-y-4 w-1/4 shadow-md">
+        <h1 className="font-semibold text-xl">Create Account</h1>
+        <form
+          action={handleSignupSubmit}
+          className="flex flex-col items-start w-full"
+        >
+          <label className="text-sm">Username</label>
+          <input
+            type="text"
+            name="username"
+            className="mt-2 mb-1 p-1 w-full border border-gray-200 rounded-md"
+          />
+          <label className="text-sm">Password</label>
+          <input
+            type="password"
+            name="password"
+            className="mb-2 mt-1 p-1 w-full border border-gray-200 rounded-md"
+          />
+          <div className="flex w-full justify-between align-middle mt-4">
+            <button
+              type="submit"
+              className="text-white bg-gray-600 hover:bg-gray-800 rounded-lg py-2 px-4 w-full"
+            >
+              Let's go
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   );
 }
