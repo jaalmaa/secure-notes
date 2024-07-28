@@ -15,10 +15,6 @@ export async function encryptJWT(user_id: string) {
   return jwt;
 }
 
-export function validateJWT() {
-  return 1;
-}
-
 export interface UserSchema {
   id?: string;
   username: string;
