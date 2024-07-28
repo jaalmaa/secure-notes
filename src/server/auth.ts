@@ -32,9 +32,7 @@ export async function createUser(user: UserSchema) {
       "Username must be at least 2 characters and password must be at least 6 characters"
     );
   }
-  const userExists = await prisma.user.findFirst({
-    where: { username },
-  });
+  const userExists = await checkUserExists(username);
   if (!userExists) {
     const hash = createHash(password);
     await prisma.user.create({
@@ -44,19 +42,34 @@ export async function createUser(user: UserSchema) {
       },
     });
   }
+  return true;
 }
 
 export async function login(username: string, password: string) {
-  const user = await prisma.user.findFirst({
-    where: { username },
-  });
-  if (!user) throw new Error("User does not exist");
-  const isCorrectPassword = compareSync(password, user.password);
-  if (!isCorrectPassword) throw new Error("incorrect password");
-  const token = encryptJWT(user.id);
-  return token;
+  const user = await getUser(username);
+  if (user) {
+    const isCorrectPassword = compareSync(password, user.password);
+    if (!isCorrectPassword) throw new Error("incorrect password");
+    const token = encryptJWT(user.id);
+    return token;
+  }
 }
 
 export function createHash(password: string) {
   return hashSync(password, 10);
+}
+
+export async function getUser(username: string) {
+  const user = await prisma.user.findFirst({
+    where: { username },
+  });
+  return user;
+}
+
+export async function checkUserExists(username: string): Promise<Boolean> {
+  const userExists = await prisma.user.findFirst({
+    where: { username },
+  });
+  if (userExists) return true;
+  else return false;
 }
