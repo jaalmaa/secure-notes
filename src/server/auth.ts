@@ -37,8 +37,9 @@ export async function createUser(user: UserSchema) {
         password: hash,
       },
     });
+    return true;
   }
-  return true;
+  throw new Error("User already exists");
 }
 
 export async function login(username: string, password: string) {
