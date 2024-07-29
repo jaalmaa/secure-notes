@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const Navbar = () => {
@@ -10,8 +11,10 @@ export const Navbar = () => {
 
   return (
     <>
-      <div className="max-w-full bg-white rounded flex justify-between p-4 mx-1">
-        <p className="text-xl font-semibold">Secure Notes</p>
+      <div className="bg-white rounded flex justify-between p-4 mx-1">
+        <Link href="/" className="text-xl font-semibold">
+          Secure Notes
+        </Link>
         <form action={handleLogout}>
           <button type="submit" className="hover:text-blue-500">
             Logout

@@ -6,9 +6,9 @@ export default function NotesLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-full max-h-full w-full max-w-full flex-col bg-gray-100">
+    <div className="flex flex-col h-full max-h-full w-full max-w-full border bg-gray-100">
       <Navbar />
-      <section className="flex-grow">{children}</section>
+      <section className="h-full w-full">{children}</section>
     </div>
   );
 }
