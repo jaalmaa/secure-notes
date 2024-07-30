@@ -35,8 +35,6 @@ export async function createNote(note: Note) {
 
 export async function getNotesByUserId(userid: UUID) {}
 
-export async function getNotesByUsername(username: string) {}
-
 export function convertTitleToSlug(title: string): string {
   return title.replace(" ", "-");
 }

@@ -19,5 +19,5 @@ export async function handleNoteSubmit(
   const decodedToken = await decodeToken(authCookie.value);
   const authorId = decodedToken.sub as UUID;
   const createdNote = await createNote({ title, content, authorId });
-  return "1";
+  return "";
 }
