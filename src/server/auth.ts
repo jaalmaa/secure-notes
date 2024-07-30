@@ -1,5 +1,5 @@
 import "server-only";
-import { SignJWT } from "jose";
+import { SignJWT, decodeJwt } from "jose";
 import { hashSync, compareSync } from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 
@@ -19,6 +19,10 @@ export interface UserSchema {
   id?: string;
   username: string;
   password: string;
+}
+
+export async function decodeToken(token: string) {
+  return decodeJwt(token);
 }
 
 export async function createUser(user: UserSchema) {
