@@ -9,7 +9,7 @@ type User = {
   notes: Note[];
 };
 
-type Note = {
+export type Note = {
   id?: UUID;
   title: string;
   slug?: string;
@@ -33,7 +33,12 @@ export async function createNote(note: Note) {
   });
 }
 
-export async function getNotesByUserId(userid: UUID) {}
+export async function getNotesByUserId(userid: UUID) {
+  const notes = await prisma.note.findMany({
+    where: { authorId: userid },
+  });
+  return notes;
+}
 
 export function convertTitleToSlug(title: string): string {
   return title.replace(" ", "-");
