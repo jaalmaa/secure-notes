@@ -7,6 +7,7 @@ import { createNote } from "~/server/notes";
 import { UUID } from "crypto";
 import { RequestCookie } from "~/middleware";
 import { getNotesByUserId } from "~/server/notes";
+import { revalidatePath } from "next/cache";
 
 export async function getUUIDFromJWT(authCookie: RequestCookie) {
   const decodedToken = await decodeToken(authCookie.value);
@@ -40,5 +41,6 @@ export async function handleNoteSubmit(
   const content = formData.get("content") as string;
   const authorId = await getUUIDFromJWT(authCookie);
   const createdNote = await createNote({ title, content, authorId });
+  revalidatePath("/notes");
   return "";
 }
