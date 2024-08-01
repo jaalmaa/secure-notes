@@ -2,9 +2,8 @@
 import { handleNoteSubmit } from "~/app/notes/NotesActions";
 import { useFormState } from "react-dom";
 import { useState } from "react";
-import type { Note } from "~/server/notes";
 
-export function NoteEditor(props: { note: any }) {
+export function NoteEditor(props: { note?: any }) {
   const [errorMessage, noteSubmit] = useFormState(handleNoteSubmit, null);
   const initialNote = props.note;
   const [note, setNote] = useState(initialNote);
@@ -21,6 +20,11 @@ export function NoteEditor(props: { note: any }) {
         className="flex flex-col h-full w-full p-1 rounded-md"
         action={noteSubmit}
       >
+        {initialNote?.id ? (
+          <input name="id" type="hidden" value={initialNote.id}></input>
+        ) : (
+          ""
+        )}
         <input
           name="title"
           value={note?.title}

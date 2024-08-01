@@ -3,7 +3,7 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import { decodeToken } from "~/server/auth";
 import { redirect } from "next/navigation";
-import { createNote, getNoteById } from "~/server/notes";
+import { createNote, getNoteById, updateNoteContentById } from "~/server/notes";
 import { UUID } from "crypto";
 import { RequestCookie } from "~/middleware";
 import { getNotesByUserId } from "~/server/notes";
@@ -45,8 +45,14 @@ export async function handleNoteSubmit(
   }
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
-  const authorId = await getUUIDFromJWT(authCookie);
-  const createdNote = await createNote({ title, content, authorId });
-  revalidatePath("/notes");
+  const id = formData.get("id") as UUID;
+  if (id) {
+    const updateNote = await updateNoteContentById(id, title, content);
+    revalidatePath(`/notes/${id}`);
+  } else {
+    const authorId = await getUUIDFromJWT(authCookie);
+    const createdNoteId = await createNote({ title, content, authorId });
+    redirect(`/notes/${createdNoteId}`);
+  }
   return "";
 }
