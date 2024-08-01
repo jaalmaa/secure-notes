@@ -10,15 +10,9 @@ export type NoteEditorProps = {
   content: string;
 };
 
-const defaultProps: NoteEditorProps = {
-  id: "",
-  title: "",
-  content: "",
-};
-
 export function NoteEditor(props: { note: NoteEditorProps }) {
   const [errorMessage, noteSubmit] = useFormState(handleNoteSubmit, null);
-  const initialNote = props ? props.note : defaultProps;
+  const initialNote = props.note;
 
   const [note, setNote] = useState(initialNote);
   const handleTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
