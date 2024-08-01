@@ -1,4 +1,5 @@
 import { getCurrentUserContext, getNotesForUser } from "./NotesActions";
+import Link from "next/link";
 
 export async function NotesSidebar() {
   const userContext = await getCurrentUserContext();
@@ -12,7 +13,11 @@ export async function NotesSidebar() {
       <h1 className="text-lg mb-4">Your Notes</h1>
       <ul>
         {notes.map((note, id) => {
-          return <li key={id}>{note.title}</li>;
+          return (
+            <li key={id}>
+              <Link href={`/notes/${note.id}`}>{note.title}</Link>
+            </li>
+          );
         })}
       </ul>
     </div>

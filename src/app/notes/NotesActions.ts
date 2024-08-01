@@ -3,7 +3,7 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import { decodeToken } from "~/server/auth";
 import { redirect } from "next/navigation";
-import { createNote } from "~/server/notes";
+import { createNote, getNoteById } from "~/server/notes";
 import { UUID } from "crypto";
 import { RequestCookie } from "~/middleware";
 import { getNotesByUserId } from "~/server/notes";
@@ -27,6 +27,12 @@ export async function getCurrentUserContext() {
 export async function getNotesForUser(userContext: UUID) {
   const notes = await getNotesByUserId(userContext);
   return notes;
+}
+
+export async function getNote(noteId: UUID) {
+  const note = await getNoteById(noteId);
+  if (!note) return undefined;
+  return note;
 }
 
 export async function handleNoteSubmit(

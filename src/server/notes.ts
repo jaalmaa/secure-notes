@@ -40,6 +40,13 @@ export async function getNotesByUserId(userid: UUID) {
   return notes;
 }
 
+export async function getNoteById(noteId: UUID) {
+  const note = await prisma.note.findFirst({
+    where: { id: noteId },
+  });
+  return note;
+}
+
 export function convertTitleToSlug(title: string): string {
   return title.replace(" ", "-");
 }
