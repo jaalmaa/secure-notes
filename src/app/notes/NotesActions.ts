@@ -11,8 +11,8 @@ import { revalidatePath } from "next/cache";
 
 const NoteSubmitSchema = z.object({
   id: z.string().uuid().nullable(),
-  title: z.string().min(1),
-  content: z.string(),
+  title: z.string().min(1).trim(),
+  content: z.string().trim(),
 });
 
 type NoteSubmitData = z.infer<typeof NoteSubmitSchema>;
