@@ -9,6 +9,14 @@ import { RequestCookie } from "~/middleware";
 import { getNotesByUserId } from "~/server/notes";
 import { revalidatePath } from "next/cache";
 
+const NoteSubmitSchema = z.object({
+  id: z.string().uuid().nullable(),
+  title: z.string().min(1),
+  content: z.string(),
+});
+
+type NoteSubmitData = z.infer<typeof NoteSubmitSchema>;
+
 export async function getUUIDFromJWT(authCookie: RequestCookie) {
   const decodedToken = await decodeToken(authCookie.value);
   const authorId = decodedToken.sub as UUID;
@@ -46,6 +54,15 @@ export async function handleNoteSubmit(
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
   const id = formData.get("id") as UUID;
+  try {
+    NoteSubmitSchema.parse({
+      id: id,
+      title: title,
+      content: content,
+    });
+  } catch (error) {
+    return "Title cannot be empty";
+  }
   if (id) {
     const updateNote = await updateNoteContentById(id, title, content);
     revalidatePath(`/notes/${id}`);
