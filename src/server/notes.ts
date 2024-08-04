@@ -48,6 +48,14 @@ export async function getNoteById(noteId: UUID) {
   return note;
 }
 
+export async function deleteNoteById(noteId: UUID) {
+  const deleted = await prisma.note.delete({
+    where: { id: noteId },
+  });
+  if (deleted) return true;
+  else return false;
+}
+
 export async function updateNoteContentById(
   noteId: UUID,
   title: string,

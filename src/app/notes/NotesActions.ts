@@ -3,7 +3,12 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import { decodeToken } from "~/server/auth";
 import { redirect } from "next/navigation";
-import { createNote, getNoteById, updateNoteContentById } from "~/server/notes";
+import {
+  createNote,
+  deleteNoteById,
+  getNoteById,
+  updateNoteContentById,
+} from "~/server/notes";
 import { UUID } from "crypto";
 import { RequestCookie } from "~/middleware";
 import { getNotesByUserId } from "~/server/notes";
@@ -42,6 +47,12 @@ export async function getNote(noteId: UUID) {
   const userId = await getCurrentUserContext();
   if (!note || userId !== note.authorId) redirect("/notes");
   return note;
+}
+
+export async function deleteNote(noteId: UUID) {
+  const deletedNote = deleteNoteById(noteId);
+  revalidatePath("/notes");
+  return true;
 }
 
 export async function handleNoteSubmit(

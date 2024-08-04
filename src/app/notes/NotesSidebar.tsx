@@ -5,6 +5,7 @@ import {
 } from "~/app/notes/NotesActions";
 import { NoteLinkButton } from "~/app/notes/NoteLinkButton";
 import Link from "next/link";
+import DeleteNoteButton from "./DeleteNoteButton";
 
 export async function NotesSidebar() {
   const userContext = await getCurrentUserContext();
@@ -18,12 +19,15 @@ export async function NotesSidebar() {
     <div className="w-96 bg-white my-1 ml-1 py-2 px-4 flex flex-col rounded">
       <div className="flex justify-between mb-4">
         <h1 className="text-lg">Your Notes</h1>
-        <Link
-          href="/notes"
-          className="px-2 rounded-lg hover:bg-gray-100 ease-in-out"
-        >
-          +
-        </Link>
+        <div>
+          <Link
+            href="/notes"
+            className="px-2 mx-1 rounded-lg hover:bg-gray-100 ease-in-out"
+          >
+            +
+          </Link>
+          <DeleteNoteButton />
+        </div>
       </div>
       <ul>
         {notes.map((note, id) => {
