@@ -39,7 +39,8 @@ export async function getNotesForUser(userContext: UUID) {
 
 export async function getNote(noteId: UUID) {
   const note = await getNoteById(noteId);
-  if (!note) return undefined;
+  const userId = await getCurrentUserContext();
+  if (!note || userId !== note.authorId) redirect("/notes");
   return note;
 }
 
