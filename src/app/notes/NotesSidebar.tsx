@@ -4,6 +4,7 @@ import {
   getNotesForUser,
 } from "~/app/notes/NotesActions";
 import { NoteLinkButton } from "~/app/notes/NoteLinkButton";
+import Link from "next/link";
 
 export async function NotesSidebar() {
   const userContext = await getCurrentUserContext();
@@ -12,9 +13,18 @@ export async function NotesSidebar() {
   }
   const notes = (await getNotesForUser(userContext)) as Note[];
 
+  // TODO: when creating a new note, add an action to append a new note to the list on the sidebar
   return (
     <div className="w-96 bg-white my-1 ml-1 py-2 px-4 flex flex-col rounded">
-      <h1 className="text-lg mb-4">Your Notes</h1>
+      <div className="flex justify-between mb-4">
+        <h1 className="text-lg">Your Notes</h1>
+        <Link
+          href="/notes"
+          className="px-2 rounded-lg hover:bg-gray-100 ease-in-out"
+        >
+          +
+        </Link>
+      </div>
       <ul>
         {notes.map((note, id) => {
           return <NoteLinkButton key={id} note={note} />;
