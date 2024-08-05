@@ -8,7 +8,7 @@ export default function NotesLayout({
   return (
     <div className="flex flex-col h-full max-h-full w-full max-w-full bg-gray-100">
       <Navbar />
-      <section className="h-full w-full">{children}</section>
+      <section className="h-full w-full mt-1">{children}</section>
     </div>
   );
 }

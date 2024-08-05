@@ -51,9 +51,7 @@ export async function getNote(noteId: UUID) {
 
 export async function deleteNote(noteId: UUID) {
   const deletedNote = deleteNoteById(noteId);
-  revalidatePath("/notes");
   redirect("/notes");
-  return true;
 }
 
 export async function handleNoteSubmit(

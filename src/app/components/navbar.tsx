@@ -11,7 +11,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <div className="bg-white rounded flex justify-between p-4 mx-1">
+      <div className="bg-white rounded flex justify-between p-4">
         <Link href="/" className="text-xl font-semibold">
           Secure Notes
         </Link>

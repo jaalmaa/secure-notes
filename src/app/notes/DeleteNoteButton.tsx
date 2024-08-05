@@ -13,9 +13,9 @@ export default function DeleteNoteButton() {
   return (
     <button
       onClick={handleDeleteNote}
-      className="px-2 rounded-lg hover:bg-gray-100 ease-in-out"
+      className="py-2 px-4 rounded-md hover:bg-gray-100"
     >
-      -
+      Delete
     </button>
   );
 }
