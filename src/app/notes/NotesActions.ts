@@ -15,12 +15,12 @@ import { getNotesByUserId } from "~/server/notes";
 import { revalidatePath } from "next/cache";
 
 const NoteSubmitSchema = z.object({
-  id: z.string().uuid().nullable(),
+  id: z.string().uuid().nullable().optional(),
   title: z.string().min(1).trim(),
   content: z.string().trim(),
 });
 
-type NoteSubmitData = z.infer<typeof NoteSubmitSchema>;
+export type NoteSubmitData = z.infer<typeof NoteSubmitSchema>;
 
 export async function getUUIDFromJWT(authCookie: RequestCookie) {
   const decodedToken = await decodeToken(authCookie.value);
@@ -54,17 +54,11 @@ export async function deleteNote(noteId: UUID) {
   redirect("/notes");
 }
 
-export async function handleNoteSubmit(
-  previousState: string | undefined | null,
-  formData: FormData
-) {
+export async function SaveNote(notedata: NoteSubmitData) {
   const authCookie = cookies().get("Authorization");
-  if (!authCookie) {
-    redirect("/login");
-  }
-  const title = formData.get("title") as string;
-  const content = formData.get("content") as string;
-  const id = formData.get("id") as UUID;
+  if (!authCookie) redirect("/login");
+  const { title, content } = notedata;
+  const id = notedata.id ? notedata.id : undefined;
   try {
     NoteSubmitSchema.parse({
       id: id,
@@ -72,15 +66,14 @@ export async function handleNoteSubmit(
       content: content,
     });
   } catch (error) {
-    return "Title cannot be empty";
+    return "An error occurred.";
   }
   if (id) {
-    const updateNote = await updateNoteContentById(id, title, content);
-    revalidatePath(`/notes/${id}`);
+    await updateNoteContentById(id as UUID, title, content);
+    revalidatePath(`/notes/${notedata.id}`);
   } else {
     const authorId = await getUUIDFromJWT(authCookie);
     const createdNoteId = await createNote({ title, content, authorId });
     redirect(`/notes/${createdNoteId}`);
   }
-  return "";
 }

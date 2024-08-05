@@ -1,34 +1,41 @@
 "use client";
-import { handleNoteSubmit } from "~/app/notes/NotesActions";
-import { useFormState } from "react-dom";
 import { useState } from "react";
-import type { UUID } from "crypto";
 import DeleteNoteButton from "~/app/notes/DeleteNoteButton";
+import { SaveNote, type NoteSubmitData } from "~/app/notes/NotesActions";
 
-export type NoteEditorProps = {
-  id?: UUID | string;
-  title: string;
-  content: string;
-};
-
-export function NoteEditor(props: { note: NoteEditorProps }) {
-  const [errorMessage, noteSubmit] = useFormState(handleNoteSubmit, null);
+export function NoteEditor(props: { note: NoteSubmitData }) {
   const initialNote = props.note;
 
   const [note, setNote] = useState(initialNote);
-  const handleTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setNote({ title: event.currentTarget.value, content: note.content });
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNote({
+      id: note.id,
+      title: event.currentTarget.value,
+      content: note.content,
+    });
   };
-  const handleContentChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    setNote({ title: note.title, content: event.currentTarget.value });
+  const handleContentChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setNote({
+      id: note.id,
+      title: note.title,
+      content: event.currentTarget.value,
+    });
+  };
+  const handleNoteSave = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    const saveNote = SaveNote({
+      id: note.id,
+      title: note.title,
+      content: note.content,
+    });
   };
 
   return (
     <>
-      <form
-        className="flex flex-col h-full w-full rounded-md bg-white px-2 py-2"
-        action={noteSubmit}
-      >
+      <div className="flex flex-col h-full w-full rounded-md bg-white px-2 py-2">
         <div className="flex justify-between pr-2 flex-row">
           <input
             name="title"
@@ -37,6 +44,12 @@ export function NoteEditor(props: { note: NoteEditorProps }) {
             className="p-2 w-full h-1/8 focus:outline-none text-2xl font-semibold"
             onChange={handleTitleChange}
           />
+          <button
+            onClick={handleNoteSave}
+            className="py-2 px-4 rounded-md hover:bg-gray-200"
+          >
+            Save
+          </button>
           <div className="flex flex-row">
             {initialNote.id ? (
               <>
@@ -46,12 +59,6 @@ export function NoteEditor(props: { note: NoteEditorProps }) {
             ) : (
               ""
             )}
-            <button
-              type="submit"
-              className="py-2 px-4 rounded-md hover:bg-gray-100"
-            >
-              Save
-            </button>
           </div>
         </div>
         <textarea
@@ -61,8 +68,7 @@ export function NoteEditor(props: { note: NoteEditorProps }) {
           value={note.content ? note.content : ""}
           onChange={handleContentChange}
         ></textarea>
-      </form>
-      {errorMessage ? errorMessage : ""}
+      </div>
     </>
   );
 }
