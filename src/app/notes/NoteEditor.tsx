@@ -49,7 +49,7 @@ export function NoteEditor(props: { note: NoteEditorProps }) {
             >
               Save
             </button>
-            <DeleteNoteButton />
+            {initialNote.id ? <DeleteNoteButton /> : ""}
           </div>
         </div>
         <textarea
