@@ -29,12 +29,7 @@ export function NoteEditor(props: { note: NoteEditorProps }) {
         className="flex flex-col h-full w-full rounded-md bg-white px-2 py-2"
         action={noteSubmit}
       >
-        {initialNote.id ? (
-          <input name="id" type="hidden" value={initialNote.id}></input>
-        ) : (
-          ""
-        )}
-        <div className="flex justify-between pr-2">
+        <div className="flex justify-between pr-2 flex-row">
           <input
             name="title"
             value={note.title ? note.title : ""}
@@ -43,13 +38,20 @@ export function NoteEditor(props: { note: NoteEditorProps }) {
             onChange={handleTitleChange}
           />
           <div className="flex flex-row">
+            {initialNote.id ? (
+              <>
+                <input name="id" type="hidden" value={initialNote.id}></input>
+                <DeleteNoteButton />
+              </>
+            ) : (
+              ""
+            )}
             <button
               type="submit"
               className="py-2 px-4 rounded-md hover:bg-gray-100"
             >
               Save
             </button>
-            {initialNote.id ? <DeleteNoteButton /> : ""}
           </div>
         </div>
         <textarea
