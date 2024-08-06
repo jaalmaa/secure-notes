@@ -6,13 +6,15 @@ import { SaveNote, type NoteSubmitData } from "~/app/notes/NotesActions";
 export function NoteEditor(props: { note: NoteSubmitData }) {
   const initialNote = props.note;
 
-  const [note, setNote] = useState(initialNote);
+  const [blockSaveButton, setblockSaveButton] = useState<boolean>(true);
+  const [note, setNote] = useState<NoteSubmitData>(initialNote);
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNote({
       id: note.id,
       title: event.currentTarget.value,
       content: note.content,
     });
+    setblockSaveButton(false);
   };
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -22,10 +24,12 @@ export function NoteEditor(props: { note: NoteSubmitData }) {
       title: note.title,
       content: event.currentTarget.value,
     });
+    setblockSaveButton(false);
   };
   const handleNoteSave = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
+    setblockSaveButton(true);
     const saveNote = SaveNote({
       id: note.id,
       title: note.title,
@@ -46,7 +50,12 @@ export function NoteEditor(props: { note: NoteSubmitData }) {
           />
           <button
             onClick={handleNoteSave}
-            className="py-2 px-4 rounded-md hover:bg-gray-200"
+            className={`py-2 px-4 rounded-md ${
+              blockSaveButton
+                ? "text-gray-400 hover:bg-white"
+                : "hover:bg-gray-300"
+            }`}
+            disabled={blockSaveButton}
           >
             Save
           </button>
