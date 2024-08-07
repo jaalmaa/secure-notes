@@ -1,18 +1,16 @@
-import { Note } from "~/server/notes";
 import {
   getCurrentUserContext,
   getNotesForUser,
 } from "~/app/notes/NotesActions";
 import { NoteLinkButton } from "~/app/notes/NoteLinkButton";
 import Link from "next/link";
-import DeleteNoteButton from "./DeleteNoteButton";
 
 export async function NotesSidebar() {
   const userContext = await getCurrentUserContext();
   if (!userContext) {
     return "No notes found";
   }
-  const notes = (await getNotesForUser(userContext)) as Note[];
+  const notes = await getNotesForUser(userContext);
 
   // TODO: when creating a new note, add an action to append a new note to the list on the sidebar
   return (

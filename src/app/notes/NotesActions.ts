@@ -8,8 +8,8 @@ import {
   deleteNoteById,
   getNoteById,
   updateNoteContentById,
+  Note,
 } from "~/server/notes";
-import { UUID } from "crypto";
 import { RequestCookie } from "~/middleware";
 import { getNotesByUserId } from "~/server/notes";
 import { revalidatePath } from "next/cache";
@@ -24,7 +24,7 @@ export type NoteSubmitData = z.infer<typeof NoteSubmitSchema>;
 
 export async function getUUIDFromJWT(authCookie: RequestCookie) {
   const decodedToken = await decodeToken(authCookie.value);
-  const authorId = decodedToken.sub as UUID;
+  const authorId = decodedToken.sub;
   return authorId;
 }
 
@@ -37,19 +37,19 @@ export async function getCurrentUserContext() {
   return currentUserContext;
 }
 
-export async function getNotesForUser(userContext: UUID) {
+export async function getNotesForUser(userContext: string): Promise<Note[]> {
   const notes = await getNotesByUserId(userContext);
   return notes;
 }
 
-export async function getNote(noteId: UUID) {
+export async function getNote(noteId: string) {
   const note = await getNoteById(noteId);
   const userId = await getCurrentUserContext();
   if (!note || userId !== note.authorId) redirect("/notes");
   return note;
 }
 
-export async function deleteNote(noteId: UUID) {
+export async function deleteNote(noteId: string) {
   const deletedNote = deleteNoteById(noteId);
   redirect("/notes");
 }
@@ -69,11 +69,15 @@ export async function SaveNote(notedata: NoteSubmitData) {
     return "An error occurred.";
   }
   if (id) {
-    await updateNoteContentById(id as UUID, title, content);
+    await updateNoteContentById(id, title, content);
     revalidatePath(`/notes/${notedata.id}`);
   } else {
     const authorId = await getUUIDFromJWT(authCookie);
-    const createdNoteId = await createNote({ title, content, authorId });
-    redirect(`/notes/${createdNoteId}`);
+    if (authorId) {
+      const createdNoteId = await createNote({ title, content, authorId });
+      redirect(`/notes/${createdNoteId}`);
+    } else {
+      redirect("/login");
+    }
   }
 }
