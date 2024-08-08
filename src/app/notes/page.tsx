@@ -1,7 +1,8 @@
 import { NoteEditor } from "~/app/notes/NoteEditor";
 import { NotesSidebar } from "~/app/notes/NotesSidebar";
+import { Note } from "~/server/notes";
 
-const NoteEditorEmptyProps = {
+const NoteEditorEmptyProps: Note = {
   id: "",
   updatedAt: null,
   title: "",
