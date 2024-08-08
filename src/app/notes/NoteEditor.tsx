@@ -3,19 +3,16 @@ import { useState } from "react";
 import DeleteNoteButton from "~/app/notes/DeleteNoteButton";
 import { SaveNote, type NoteSubmitData } from "~/app/notes/NotesActions";
 import { Modal } from "~/app/components/modal";
+import type { Note } from "~/server/notes";
 
-export type NoteDefaultData = {
-  id?: string;
-  updatedAt?: Date | null;
-  title: string;
-  content: string;
-};
-
-export function NoteEditor(props: { note: NoteDefaultData }) {
+export function NoteEditor(props: { note: Note }) {
   const initialNote = props.note;
 
+  const [note, setNote] = useState<NoteSubmitData>(initialNote);
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(
+    initialNote.updatedAt ? initialNote.updatedAt : null
+  );
   const [blockSaveButton, setblockSaveButton] = useState<boolean>(true);
-  const [note, setNote] = useState<NoteDefaultData>(initialNote);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleModal = (
@@ -27,7 +24,6 @@ export function NoteEditor(props: { note: NoteDefaultData }) {
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNote({
       id: note.id,
-      updatedAt: note.updatedAt,
       title: event.currentTarget.value,
       content: note.content,
     });
@@ -38,7 +34,6 @@ export function NoteEditor(props: { note: NoteDefaultData }) {
   ) => {
     setNote({
       id: note.id,
-      updatedAt: note.updatedAt,
       title: note.title,
       content: event.currentTarget.value,
     });
@@ -53,6 +48,7 @@ export function NoteEditor(props: { note: NoteDefaultData }) {
       title: note.title,
       content: note.content,
     });
+    setUpdatedAt(new Date());
   };
 
   return (
@@ -108,9 +104,9 @@ export function NoteEditor(props: { note: NoteDefaultData }) {
             Save
           </button>
         </div>
-        {note.updatedAt ? (
+        {updatedAt ? (
           <p className="text-gray-400 text-xs flex justify-end px-6 pt-2">
-            Last updated at: {note.updatedAt?.toLocaleString()}
+            Last updated at: {updatedAt?.toLocaleString()}
           </p>
         ) : (
           ""

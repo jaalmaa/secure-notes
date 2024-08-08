@@ -1,12 +1,12 @@
 import { NoteEditor } from "~/app/notes/NoteEditor";
 import { NotesSidebar } from "~/app/notes/NotesSidebar";
-import type { NoteSubmitData } from "~/app/notes/NotesActions";
 
 const NoteEditorEmptyProps = {
   id: "",
   updatedAt: null,
   title: "",
   content: "",
+  authorId: "",
 };
 
 export default function Page() {
