@@ -1,4 +1,3 @@
-import { UUID } from "crypto";
 import { NoteEditor } from "~/app/notes/NoteEditor";
 import { NotesSidebar } from "~/app/notes/NotesSidebar";
 import { getNote } from "~/app/notes/NotesActions";
@@ -6,7 +5,7 @@ import { getNote } from "~/app/notes/NotesActions";
 export default async function noteView({
   params: { id: noteId },
 }: {
-  params: { id: UUID };
+  params: { id: string };
 }) {
   const note = await getNote(noteId);
 

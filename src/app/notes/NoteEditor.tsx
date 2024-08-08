@@ -3,12 +3,16 @@ import { useState } from "react";
 import DeleteNoteButton from "~/app/notes/DeleteNoteButton";
 import { SaveNote, type NoteSubmitData } from "~/app/notes/NotesActions";
 import { Modal } from "~/app/components/modal";
+import type { Note } from "~/server/notes";
 
-export function NoteEditor(props: { note: NoteSubmitData }) {
+export function NoteEditor(props: { note: Note }) {
   const initialNote = props.note;
 
-  const [blockSaveButton, setblockSaveButton] = useState<boolean>(true);
   const [note, setNote] = useState<NoteSubmitData>(initialNote);
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(
+    initialNote.updatedAt ? initialNote.updatedAt : null
+  );
+  const [blockSaveButton, setblockSaveButton] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleModal = (
@@ -44,12 +48,13 @@ export function NoteEditor(props: { note: NoteSubmitData }) {
       title: note.title,
       content: note.content,
     });
+    setUpdatedAt(new Date());
   };
 
   return (
     <>
-      <div className="flex flex-col h-full w-full rounded-md bg-white px-2 py-2">
-        <div className="flex justify-between pr-2 flex-row">
+      <div className="flex flex-row h-full w-full rounded-md bg-white px-4 py-2">
+        <div className="flex justify-between pr-2 flex-col flex-grow">
           <input
             name="title"
             value={note.title ? note.title : ""}
@@ -57,7 +62,16 @@ export function NoteEditor(props: { note: NoteSubmitData }) {
             className="p-2 w-full h-1/8 focus:outline-none text-2xl font-semibold"
             onChange={handleTitleChange}
           />
-          <div className="flex flex-row">
+          <textarea
+            className="w-full flex-1 p-2 focus:outline-none"
+            placeholder="Begin typing your note..."
+            name="content"
+            value={note.content ? note.content : ""}
+            onChange={handleContentChange}
+          ></textarea>
+        </div>
+        <div className="flex flex-col w-64">
+          <div className="flex flex-row justify-end">
             {initialNote.id ? (
               <>
                 <button
@@ -86,26 +100,26 @@ export function NoteEditor(props: { note: NoteSubmitData }) {
             ) : (
               ""
             )}
+            <button
+              onClick={handleNoteSave}
+              className={`py-2 px-4 rounded-md ${
+                blockSaveButton
+                  ? "text-gray-400 hover:bg-white"
+                  : "hover:bg-gray-300"
+              }`}
+              disabled={blockSaveButton}
+            >
+              Save
+            </button>
           </div>
-          <button
-            onClick={handleNoteSave}
-            className={`py-2 px-4 rounded-md ${
-              blockSaveButton
-                ? "text-gray-400 hover:bg-white"
-                : "hover:bg-gray-300"
-            }`}
-            disabled={blockSaveButton}
-          >
-            Save
-          </button>
+          {updatedAt ? (
+            <p className="text-gray-400 text-xs flex justify-end pt-2">
+              Last updated at: {updatedAt?.toLocaleString()}
+            </p>
+          ) : (
+            ""
+          )}
         </div>
-        <textarea
-          className="w-full flex-1 shadow-sm p-2 focus:outline-none"
-          placeholder="Begin typing your note..."
-          name="content"
-          value={note.content ? note.content : ""}
-          onChange={handleContentChange}
-        ></textarea>
       </div>
     </>
   );
