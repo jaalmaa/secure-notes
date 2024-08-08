@@ -10,8 +10,8 @@ type User = {
 
 export type Note = {
   id?: string;
+  updatedAt?: Date | null;
   title: string;
-  slug?: string;
   content: string;
   author?: User;
   authorId: string;
@@ -21,11 +21,9 @@ const prisma = new PrismaClient();
 
 export async function createNote(note: Note): Promise<string | undefined> {
   const { title, content, authorId } = note;
-  const slug = convertTitleToSlug(title);
   const createdNote = await prisma.note.create({
     data: {
       title: title,
-      slug: slug,
       content: content,
       authorId: authorId,
     },
@@ -80,8 +78,4 @@ export async function checkNoteExists(noteId: string): Promise<Boolean> {
   });
   if (note) return true;
   else return false;
-}
-
-export function convertTitleToSlug(title: string): string {
-  return title.replace(" ", "-");
 }

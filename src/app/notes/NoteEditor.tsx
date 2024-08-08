@@ -4,11 +4,18 @@ import DeleteNoteButton from "~/app/notes/DeleteNoteButton";
 import { SaveNote, type NoteSubmitData } from "~/app/notes/NotesActions";
 import { Modal } from "~/app/components/modal";
 
-export function NoteEditor(props: { note: NoteSubmitData }) {
+export type NoteDefaultData = {
+  id?: string;
+  updatedAt?: Date | null;
+  title: string;
+  content: string;
+};
+
+export function NoteEditor(props: { note: NoteDefaultData }) {
   const initialNote = props.note;
 
   const [blockSaveButton, setblockSaveButton] = useState<boolean>(true);
-  const [note, setNote] = useState<NoteSubmitData>(initialNote);
+  const [note, setNote] = useState<NoteDefaultData>(initialNote);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleModal = (
@@ -20,6 +27,7 @@ export function NoteEditor(props: { note: NoteSubmitData }) {
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNote({
       id: note.id,
+      updatedAt: note.updatedAt,
       title: event.currentTarget.value,
       content: note.content,
     });
@@ -30,6 +38,7 @@ export function NoteEditor(props: { note: NoteSubmitData }) {
   ) => {
     setNote({
       id: note.id,
+      updatedAt: note.updatedAt,
       title: note.title,
       content: event.currentTarget.value,
     });
@@ -99,8 +108,15 @@ export function NoteEditor(props: { note: NoteSubmitData }) {
             Save
           </button>
         </div>
+        {note.updatedAt ? (
+          <p className="text-gray-400 text-xs flex justify-end px-6 pt-2">
+            Last updated at: {note.updatedAt?.toLocaleString()}
+          </p>
+        ) : (
+          ""
+        )}
         <textarea
-          className="w-full flex-1 shadow-sm p-2 focus:outline-none"
+          className="w-full flex-1 p-2 focus:outline-none"
           placeholder="Begin typing your note..."
           name="content"
           value={note.content ? note.content : ""}
